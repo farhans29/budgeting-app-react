@@ -1,6 +1,7 @@
-//helper function
 import { useLoaderData } from "react-router-dom";
-import { fetchData } from "../helpers";
+
+//helper function
+import { createBudget, fetchData } from "../helpers";
 
 //components
 import Intro from "../components/Intro";
@@ -21,12 +22,26 @@ export async function dashboardAction({request}){
     const data = await request.formData();
     const {_action, ...values} = Object.fromEntries(data)
 
+    // create new user
     if(_action === "newUser"){
         try {
             localStorage.setItem("userName", JSON.stringify(values.userName))
             return toast.success(`Welcome ${values.userName}`)
         } catch(e) {
             throw new Error("There was a problem creating account.")
+        }
+    }
+
+    //create new budget
+    if(_action === "createBudget"){
+        try{
+            createBudget({
+                name: values.newBudget,
+                amount: values.newBudgetAmount
+            })
+            return toast.success("Budget Added")
+        } catch (e) {
+            throw new Error("Problem creating budget")
         }
     }
 }

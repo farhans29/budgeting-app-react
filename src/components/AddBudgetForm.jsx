@@ -13,9 +13,9 @@ const AddBudgetForm = () => {
         method="post" 
         className="grid-sm">
             <div className="grid-xs">
-                <label htmlFor="bewBudget">Kebutuhan</label>
+                <label htmlFor="newBudget">Kebutuhan</label>
                 <input 
-                type="newBudget" 
+                name="newBudget" 
                 id="newBudget" 
                 placeholder="Belanjaan, ..." 
                 required />
@@ -32,6 +32,7 @@ const AddBudgetForm = () => {
                 inputMode="decimal"
                  />
             </div>
+            <input type="hidden" name="_action" value="createBudget" />
             <button type="submit" className="btn btn--dark">
                 <span>Tambah</span>
                 <CurrencyDollarIcon width={23}/>
