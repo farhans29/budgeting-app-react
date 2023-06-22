@@ -2,6 +2,15 @@
 
 During this course, we’ll build an interactive budget app using React Router 6.8 and local storage.
 
+## Push to other branches
+![Push other branches](assets/push-other-branch.png)
+
+<br/>
+<br/>
+
+## Homepage
+<br/>
+
 ![Homepage preview of demo page](assets/budget-app-preview.jpeg)
 
 [Demo App](https://codinginpublic.dev/projects/react-router-budget-app/)
