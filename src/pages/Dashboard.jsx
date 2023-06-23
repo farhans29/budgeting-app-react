@@ -1,11 +1,12 @@
 import { useLoaderData } from "react-router-dom";
 
 //helper function
-import { createBudget, fetchData } from "../helpers";
+import { createBudget, createExpense, fetchData, waaitt } from "../helpers";
 
 //components
 import Intro from "../components/Intro";
 import AddBudgetForm from "../components/AddBudgetForm";
+import AddExpenseForm from "../components/AddExpenseForm";
 
 //library imports
 import { toast } from "react-toastify";
@@ -19,6 +20,8 @@ export function dashboardLoader(){
 
 //actions
 export async function dashboardAction({request}){
+    await waaitt();
+
     const data = await request.formData();
     const {_action, ...values} = Object.fromEntries(data)
 
@@ -34,14 +37,28 @@ export async function dashboardAction({request}){
 
     //create new budget
     if(_action === "createBudget"){
-        try{
+        try {
             createBudget({
                 name: values.newBudget,
                 amount: values.newBudgetAmount
             })
-            return toast.success("Budget Added")
+            return toast.success("Budget Ditambahkan")
         } catch (e) {
             throw new Error("Problem creating budget")
+        }
+    }
+
+    //create new expense
+    if(_action === "createExpense"){
+        try {
+            createExpense({
+                name: values.newExpense,
+                amount: values.newExpenseAmount,
+                budgetId: values.newExpenseBudget
+            })
+            return toast.success(`Pengeluaran ${values.newExpense} Ditambahkan`)
+        } catch (e) {
+            throw new Error("Problem creating expense")
         }
     }
 }
@@ -60,13 +77,24 @@ const Dashboard = () => {
                             <span className="accent"> {userName}</span> 
                         </h1>
                         {/* function check budget */}
-                        
                         <div className="grid-sm">
-                            <div className="grid-lg">
-                                <div className="flex-lg">
-                                    <AddBudgetForm />
-                                </div>
-                            </div>
+                            {
+                                budgets && budgets.length > 0 ?
+                                (
+                                <div className="grid-lg">
+                                    <div className="flex-lg">
+                                        <AddBudgetForm />
+                                        <AddExpenseForm budgets={budgets} />
+                                    </div>
+                                </div> 
+                                ) : (
+                                    <div className="grid-sm">
+                                        <p>Personal budgeting is secret to financial freedom</p>
+                                        <p>Create a budget to get started!</p>
+                                        <AddBudgetForm />
+                                    </div>
+                                )
+                            }
                         </div>
                     </div>
                 ) : <Intro/> 
