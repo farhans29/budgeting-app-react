@@ -1,24 +1,44 @@
-import { Form } from "react-router-dom";
+import { useRef } from "react";
+
+//react router dom import
+import { Form, useFetcher } from "react-router-dom";
 
 //library import
 import { CurrencyDollarIcon } from "@heroicons/react/24/solid";
+import { useEffect } from "react";
 
 const AddBudgetForm = () => {
+    const fetcher = useFetcher()
+    const isSubmitting = fetcher.state === "submitting"
+
+    const formRef = useRef()
+    const focusRef = useRef();
+
+    useEffect(() => {
+      if(isSubmitting){
+        formRef.current.reset()
+        focusRef.current.focus()
+      }
+    }, [isSubmitting])
+
   return (
     <div className="form-wrapper">
         <h2 className="h3">
-            Create budget
+            Tambahkan Budget
         </h2>
-        <Form 
+        <fetcher.Form 
         method="post" 
-        className="grid-sm">
+        className="grid-sm"
+        ref={formRef}>
             <div className="grid-xs">
-                <label htmlFor="bewBudget">Kebutuhan</label>
+                <label htmlFor="newBudget">Kebutuhan</label>
                 <input 
-                type="newBudget" 
+                type="text"
+                name="newBudget" 
                 id="newBudget" 
-                placeholder="Belanjaan, ..." 
-                required />
+                placeholder="Listrik, Air, Sayur..." 
+                required
+                ref={focusRef} />
             </div>
             <div className="grid-xs">
                 <label htmlFor="newBudgetAmount">Jumlah</label>
@@ -27,17 +47,25 @@ const AddBudgetForm = () => {
                 step="0.01"
                 name="newBudgetAmount"
                 id="newBudgetAmount"
-                placeholder="Rp.50,500"
+                placeholder="10000"
                 required
                 inputMode="decimal"
                  />
             </div>
-            <button type="submit" className="btn btn--dark">
-                <span>Tambah</span>
-                <CurrencyDollarIcon width={23}/>
+            <input type="hidden" name="_action" value="createBudget" />
+            <button type="submit" className="btn btn--dark" disabled={isSubmitting}>
+                {
+                    isSubmitting ? <span>Menambahkan... </span> 
+                    : (
+                        <>
+                            <span>Tambah</span>
+                            <CurrencyDollarIcon width={23}/>
+                        </>
+                    )
+                }
             </button>
 
-        </Form>
+        </fetcher.Form>
     </div>
   )
 }
